@@ -1,4 +1,4 @@
-# ExSghtmltopdf
+# ExHtmltopdf
 
 HTML → PDF for Elixir, natively. An Elixir NIF wrapper for
 [sghtmltopdf](https://github.com/waka/sghtmltopdf), a PDF rendering engine
@@ -14,10 +14,10 @@ written in Rust on Servo components (html5ever, Stylo, Taffy).
   than headless Chrome on large documents.
 
 ```elixir
-{:ok, pdf} = ExSghtmltopdf.render("<h1>Hello</h1><p>from Elixir</p>")
+{:ok, pdf} = ExHtmltopdf.render("<h1>Hello</h1><p>from Elixir</p>")
 
 :ok =
-  ExSghtmltopdf.render_to_file(html, "invoice.pdf",
+  ExHtmltopdf.render_to_file(html, "invoice.pdf",
     page_size: "A4",
     margin_top: "20mm",
     footer_center: "Page [page] of [topage]"
@@ -29,7 +29,7 @@ written in Rust on Servo components (html5ever, Stylo, Taffy).
 ```elixir
 def deps do
   [
-    {:ex_sghtmltopdf, "~> 0.1"}
+    {:ex_htmltopdf, "~> 0.1"}
   ]
 end
 ```
@@ -38,14 +38,14 @@ end
 
 ```elixir
 # To a binary (send it, store it, no temp files):
-{:ok, pdf} = ExSghtmltopdf.render(html, page_size: "A4")
+{:ok, pdf} = ExHtmltopdf.render(html, page_size: "A4")
 
 # Raising variant:
-pdf = ExSghtmltopdf.render!(html)
+pdf = ExHtmltopdf.render!(html)
 
 # Straight to a file — written atomically (temp file + rename), a failed
 # render never leaves a truncated PDF behind:
-:ok = ExSghtmltopdf.render_to_file(html, "out.pdf", grayscale: true)
+:ok = ExHtmltopdf.render_to_file(html, "out.pdf", grayscale: true)
 ```
 
 ### Options
@@ -53,7 +53,7 @@ pdf = ExSghtmltopdf.render!(html)
 sghtmltopdf exposes one option surface — its CLI flags — shared by the CLI,
 HTTP server, Ruby gem, and this library. Options are the flag names as
 underscored atoms; values follow a few simple rules
-(see `ExSghtmltopdf.Options`):
+(see `ExHtmltopdf.Options`):
 
 ```elixir
 page_size: "A4"                     # --page-size A4
@@ -86,12 +86,12 @@ the full flag list — anything the CLI accepts works here, including new flags
 after a dependency bump, with no wrapper changes.
 
 Unsupported wkhtmltopdf options (JavaScript execution, forms, …) return a
-clear `{:error, %ExSghtmltopdf.Error{kind: :usage}}` explaining why, exactly
+clear `{:error, %ExHtmltopdf.Error{kind: :usage}}` explaining why, exactly
 like the CLI does.
 
 ### Errors
 
-Render functions return `{:error, %ExSghtmltopdf.Error{kind: kind, message:
+Render functions return `{:error, %ExHtmltopdf.Error{kind: kind, message:
 message}}` (bang variants raise it). `kind` mirrors the CLI's exit-code
 classes: `:usage` (bad options), `:input` (missing file/font, unwritable
 output), `:render` (engine constraint), `:timeout`, plus `:panic` for a
@@ -130,7 +130,7 @@ Two engine policies matter when the HTML isn't yours:
   or `allow: ["/safe/dir"]` to restrict reads to specific directories.
 
 ```elixir
-ExSghtmltopdf.render(untrusted_html, disable_local_file_access: true)
+ExHtmltopdf.render(untrusted_html, disable_local_file_access: true)
 ```
 
 ## Phoenix
@@ -144,7 +144,7 @@ def invoice(conn, %{"id" => id}) do
       invoice: Invoices.get!(id)
     )
 
-  {:ok, pdf} = ExSghtmltopdf.render(html, page_size: "A4")
+  {:ok, pdf} = ExHtmltopdf.render(html, page_size: "A4")
 
   conn
   |> put_resp_content_type("application/pdf")
@@ -155,11 +155,11 @@ end
 
 ## Development
 
-Requires a Rust toolchain. `EXSGHTMLTOPDF_BUILD=1` forces building the NIF
+Requires a Rust toolchain. `EXHTMLTOPDF_BUILD=1` forces building the NIF
 from source instead of downloading a precompiled one:
 
 ```bash
-EXSGHTMLTOPDF_BUILD=1 mix test     # or: just test
+EXHTMLTOPDF_BUILD=1 mix test     # or: just test
 just fmt                           # mix format + cargo fmt
 ```
 

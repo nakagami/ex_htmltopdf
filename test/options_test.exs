@@ -1,9 +1,9 @@
-defmodule ExSghtmltopdf.OptionsTest do
+defmodule ExHtmltopdf.OptionsTest do
   use ExUnit.Case, async: true
 
-  alias ExSghtmltopdf.Options
+  alias ExHtmltopdf.Options
 
-  doctest ExSghtmltopdf.Options
+  doctest ExHtmltopdf.Options
 
   @prefix ["sghtmltopdf", "-", "--output", "-"]
 

@@ -25,7 +25,7 @@ jobs:
             elixir: "1.18.0"
     env:
       MIX_ENV: test
-      EXSGHTMLTOPDF_BUILD: "1"
+      EXHTMLTOPDF_BUILD: "1"
     steps:
       - uses: actions/checkout@v7
 
@@ -56,8 +56,8 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-            native/ex_sghtmltopdf/target
-          key: cargo-${{ runner.os }}-${{ hashFiles('native/ex_sghtmltopdf/Cargo.lock') }}
+            native/ex_htmltopdf/target
+          key: cargo-${{ runner.os }}-${{ hashFiles('native/ex_htmltopdf/Cargo.lock') }}
           restore-keys: |
             cargo-${{ runner.os }}-
 
@@ -68,18 +68,18 @@ jobs:
         run: mix format --check-formatted
 
       - name: Check Rust formatting
-        working-directory: native/ex_sghtmltopdf
+        working-directory: native/ex_htmltopdf
         run: cargo fmt --check
 
       - name: Compile (warnings as errors)
         run: mix compile --warnings-as-errors
 
       - name: Clippy
-        working-directory: native/ex_sghtmltopdf
+        working-directory: native/ex_htmltopdf
         run: cargo clippy --all-targets -- -D warnings
 
       - name: Rust tests
-        working-directory: native/ex_sghtmltopdf
+        working-directory: native/ex_htmltopdf
         run: cargo test --all-targets
 
       - name: Run tests

@@ -1,4 +1,4 @@
-# ExSghtmltopdf Porting Playbook
+# ExHtmltopdf Porting Playbook
 
 How to grow this scaffold into a complete, community-grade Elixir wrapper
 around [sghtmltopdf](https://github.com/waka/sghtmltopdf). It carries the
@@ -16,17 +16,17 @@ shippable on its own.
 
 ## 0. The shape of the thing
 
-ExSghtmltopdf is a thin **Rustler NIF** over the `sghtmltopdf-core` crate,
+ExHtmltopdf is a thin **Rustler NIF** over the `sghtmltopdf-core` crate,
 distributed as a **precompiled binary** via `rustler_precompiled` so end users
 need no Rust toolchain. sghtmltopdf renders HTML to PDF using Servo components
 (html5ever, Stylo, Taffy) — no headless browser, no external binary.
 
 ```
-lib/ex_sghtmltopdf.ex          # render/2, render!/2, render_to_file/3(!)
-lib/ex_sghtmltopdf/options.ex  # keyword opts → CLI argv
-lib/ex_sghtmltopdf/error.ex    # %ExSghtmltopdf.Error{kind, message}
-lib/ex_sghtmltopdf/native.ex   # RustlerPrecompiled config + NIF stubs
-native/ex_sghtmltopdf/src/lib.rs  # #[rustler::nif] fns (thin bridge)
+lib/ex_htmltopdf.ex          # render/2, render!/2, render_to_file/3(!)
+lib/ex_htmltopdf/options.ex  # keyword opts → CLI argv
+lib/ex_htmltopdf/error.ex    # %ExHtmltopdf.Error{kind, message}
+lib/ex_htmltopdf/native.ex   # RustlerPrecompiled config + NIF stubs
+native/ex_htmltopdf/src/lib.rs  # #[rustler::nif] fns (thin bridge)
 ```
 
 **Golden rule (carried from ExMonty/ExBashkit):** vendor *no* rendering or
@@ -37,7 +37,7 @@ only marshal data across the boundary.
 entry point — CLI, HTTP server, Ruby gem — through **one option parser**,
 `cli::parse_convert_argv`. The Ruby binding builds a CLI argv from a Ruby
 hash and passes it through; we do exactly the same from Elixir
-(`ExSghtmltopdf.Options.to_argv/1`). This means:
+(`ExHtmltopdf.Options.to_argv/1`). This means:
 
 - zero option-decoding code in Rust (no drift when upstream adds a flag —
   new options work from Elixir the day the pin is bumped, no code change);
@@ -111,7 +111,7 @@ points at. `UPDATE_PROCEDURE.md` has the bump procedure. Upstream is at
 ## 2. Staged plan
 
 Each phase: implement the NIF(s), add the Elixir API, write tests
-(`EXSGHTMLTOPDF_BUILD=1 mix test`), update README + CHANGELOG, keep CI green.
+(`EXHTMLTOPDF_BUILD=1 mix test`), update README + CHANGELOG, keep CI green.
 Per-phase loop that worked on ExBashkit: TDD (failing test first) → implement
 → full gate (`mix test` + `mix format` + `cargo fmt` + `cargo clippy -D
 warnings` + `mix compile --warnings-as-errors`) → dispatch the code-reviewer
@@ -195,7 +195,7 @@ approval of the `hex` environment. Hex publish is **the user's call**.
 
 - [ ] NIF stubs in `native.ex` match the `#[rustler::nif]` fns exactly.
 - [ ] Public functions have moduledocs, `@spec`s, and doctests/tests.
-- [ ] `EXSGHTMLTOPDF_BUILD=1 mix test` green; `cargo fmt`/`clippy` clean.
+- [ ] `EXHTMLTOPDF_BUILD=1 mix test` green; `cargo fmt`/`clippy` clean.
 - [ ] README capability section + CHANGELOG `[Unreleased]` entry.
 - [ ] An `examples/` script demonstrating the new capability end-to-end.
 - [ ] No vendored rendering/option logic — semantics come from sghtmltopdf.

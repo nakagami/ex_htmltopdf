@@ -1,12 +1,12 @@
-# ExSghtmltopdf Update Procedure
+# ExHtmltopdf Update Procedure
 
 Run this procedure periodically to pull upstream sghtmltopdf changes and
-update ExSghtmltopdf.
+update ExHtmltopdf.
 
 ## Overview
 
-ExSghtmltopdf pins a specific sghtmltopdf git revision in
-`native/ex_sghtmltopdf/Cargo.toml` (`sghtmltopdf-core` is not published to
+ExHtmltopdf pins a specific sghtmltopdf git revision in
+`native/ex_htmltopdf/Cargo.toml` (`sghtmltopdf-core` is not published to
 crates.io — same situation as ExMonty/monty). This procedure walks through
 pulling, assessing, and integrating changes.
 
@@ -31,7 +31,7 @@ Pick the highest tag. That's the **target rev** for this update.
 ### 1.2 Identify our current pin
 
 ```bash
-grep 'rev = ' native/ex_sghtmltopdf/Cargo.toml
+grep 'rev = ' native/ex_htmltopdf/Cargo.toml
 cd ../sghtmltopdf && git describe --tags <OUR_PINNED_REV>
 ```
 
@@ -92,7 +92,7 @@ users can discover them.
 
 ### 2.1 Switch to a path dependency for development
 
-Edit `native/ex_sghtmltopdf/Cargo.toml`:
+Edit `native/ex_htmltopdf/Cargo.toml`:
 
 ```toml
 # sghtmltopdf-core = { git = "https://github.com/waka/sghtmltopdf.git", rev = "...", default-features = false, features = ["cli"] }
@@ -102,8 +102,8 @@ sghtmltopdf-core = { path = "../../../sghtmltopdf/core", default-features = fals
 ### 2.2 Build, fix, test
 
 ```bash
-cd native/ex_sghtmltopdf && cargo check
-cd ../.. && EXSGHTMLTOPDF_BUILD=1 mix test
+cd native/ex_htmltopdf && cargo check
+cd ../.. && EXHTMLTOPDF_BUILD=1 mix test
 ```
 
 If upstream changed rendered output (not API), some assertions may need
@@ -112,7 +112,7 @@ kinds) over golden bytes, so this stays rare.
 
 ### 2.3 Update docs
 
-New flags or changed defaults → README options list, `ExSghtmltopdf`
+New flags or changed defaults → README options list, `ExHtmltopdf`
 moduledoc (especially the security posture section), CHANGELOG `[Unreleased]`.
 
 ---
@@ -132,8 +132,8 @@ tag is force-updated.
 ### 3.2 Verify a clean build from the git dep
 
 ```bash
-cd native/ex_sghtmltopdf && cargo update -p sghtmltopdf-core
-cd ../.. && mix clean && EXSGHTMLTOPDF_BUILD=1 mix test
+cd native/ex_htmltopdf && cargo update -p sghtmltopdf-core
+cd ../.. && mix clean && EXHTMLTOPDF_BUILD=1 mix test
 ```
 
 ### 3.3 CHANGELOG + commit
@@ -155,8 +155,8 @@ pushes). The tag push triggers `.github/workflows/release.yml`:
 
 1. builds the 4 target NIFs and attaches them to a GitHub release;
 2. the `publish` job (gated on approval of the `hex` GitHub environment)
-   regenerates `checksum-Elixir.ExSghtmltopdf.Native.exs` from the released
-   artifacts via `mix rustler_precompiled.download ExSghtmltopdf.Native
+   regenerates `checksum-Elixir.ExHtmltopdf.Native.exs` from the released
+   artifacts via `mix rustler_precompiled.download ExHtmltopdf.Native
    --all --print`, then publishes to Hex.
 
 The checksum file must come from the *released* artifacts — never commit one
@@ -167,4 +167,4 @@ generated from a local build (the ExMonty 0.4.0 re-tag lesson).
 - **When upstream cuts a new tag** — the natural cadence.
 - **Immediately** if upstream fixes a bug affecting us (chase `main` or wait
   for the next tag depending on severity — ask the user).
-- **Before any ExSghtmltopdf release** to pick up the latest stable tag.
+- **Before any ExHtmltopdf release** to pick up the latest stable tag.

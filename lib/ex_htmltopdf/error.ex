@@ -1,4 +1,4 @@
-defmodule ExSghtmltopdf.Error do
+defmodule ExHtmltopdf.Error do
   @moduledoc """
   Error returned (or raised, from the bang variants) by render functions.
 

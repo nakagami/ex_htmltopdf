@@ -1,4 +1,4 @@
-defmodule ExSghtmltopdf.Options do
+defmodule ExHtmltopdf.Options do
   @moduledoc """
   Turns an Elixir options keyword list into the CLI argv the native engine
   consumes.
@@ -44,10 +44,10 @@ defmodule ExSghtmltopdf.Options do
   @doc """
   Builds the argv list for the native option parser.
 
-      iex> ExSghtmltopdf.Options.to_argv(page_size: "A4", grayscale: true)
+      iex> ExHtmltopdf.Options.to_argv(page_size: "A4", grayscale: true)
       ["sghtmltopdf", "-", "--output", "-", "--page-size", "A4", "--grayscale"]
 
-      iex> ExSghtmltopdf.Options.to_argv([])
+      iex> ExHtmltopdf.Options.to_argv([])
       ["sghtmltopdf", "-", "--output", "-"]
   """
   @spec to_argv(keyword() | map()) :: [String.t()]

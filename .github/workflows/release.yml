@@ -45,10 +45,10 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: native/ex_sghtmltopdf
+          workspaces: native/ex_htmltopdf
 
       - name: Build NIF
-        working-directory: native/ex_sghtmltopdf
+        working-directory: native/ex_htmltopdf
         run: cargo build --release --target ${{ matrix.target }}
 
       - name: Package NIF
@@ -57,12 +57,12 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           TARGET="${{ matrix.target }}"
           # NIF ABI version 2.15 — keep in sync with the rustler version used.
-          NIF_NAME="libex_sghtmltopdf-v${VERSION}-nif-2.15-${TARGET}.so"
+          NIF_NAME="libex_htmltopdf-v${VERSION}-nif-2.15-${TARGET}.so"
 
           if [[ "$TARGET" == *"apple"* ]]; then
-            SRC="native/ex_sghtmltopdf/target/${TARGET}/release/libex_sghtmltopdf.dylib"
+            SRC="native/ex_htmltopdf/target/${TARGET}/release/libex_htmltopdf.dylib"
           else
-            SRC="native/ex_sghtmltopdf/target/${TARGET}/release/libex_sghtmltopdf.so"
+            SRC="native/ex_htmltopdf/target/${TARGET}/release/libex_htmltopdf.so"
           fi
 
           cp "$SRC" "${NIF_NAME}"
@@ -104,7 +104,7 @@ jobs:
     env:
       # Build the NIF locally so `mix compile` doesn't try to download a NIF
       # whose checksum isn't generated yet (the classic chicken-and-egg).
-      EXSGHTMLTOPDF_BUILD: "1"
+      EXHTMLTOPDF_BUILD: "1"
       HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
     steps:
       - uses: actions/checkout@v7
@@ -122,9 +122,9 @@ jobs:
 
       - name: Generate checksums from the released artifacts
         # Downloads each target's NIF from the GitHub release created above and
-        # writes checksum-Elixir.ExSghtmltopdf.Native.exs — the canonical way, so
+        # writes checksum-Elixir.ExHtmltopdf.Native.exs — the canonical way, so
         # the format always matches what rustler_precompiled expects at fetch time.
-        run: mix rustler_precompiled.download ExSghtmltopdf.Native --all --print
+        run: mix rustler_precompiled.download ExHtmltopdf.Native --all --print
 
       - name: Commit checksums to master
         # Keeps the tracked checksum file in sync with what Hex actually
@@ -132,12 +132,12 @@ jobs:
         # next release and the repo disagrees with the published package.
         run: |
           git fetch origin master:refs/remotes/origin/master
-          if git diff --quiet origin/master -- checksum-Elixir.ExSghtmltopdf.Native.exs; then
+          if git diff --quiet origin/master -- checksum-Elixir.ExHtmltopdf.Native.exs; then
             echo "Checksum is already present on master"
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add checksum-Elixir.ExSghtmltopdf.Native.exs
+            git add checksum-Elixir.ExHtmltopdf.Native.exs
             git commit -m "Update precompiled NIF checksums for ${GITHUB_REF_NAME}"
             git push origin HEAD:master
           fi

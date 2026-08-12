@@ -2,7 +2,7 @@
 #
 # Run from the project root:
 #
-#     EXSGHTMLTOPDF_BUILD=1 mix run examples/invoice.exs
+#     EXHTMLTOPDF_BUILD=1 mix run examples/invoice.exs
 
 html = """
 <!doctype html>
@@ -41,10 +41,10 @@ html = """
 </html>
 """
 
-path = "/tmp/ex_sghtmltopdf_invoice.pdf"
+path = "/tmp/ex_htmltopdf_invoice.pdf"
 
 :ok =
-  ExSghtmltopdf.render_to_file(html, path,
+  ExHtmltopdf.render_to_file(html, path,
     page_size: "A4",
     margin_top: "20mm",
     margin_bottom: "20mm",
@@ -52,7 +52,7 @@ path = "/tmp/ex_sghtmltopdf_invoice.pdf"
     footer_center: "Page [page] of [topage]"
   )
 
-{:ok, pdf} = ExSghtmltopdf.render(html)
+{:ok, pdf} = ExHtmltopdf.render(html)
 
 IO.puts("Wrote #{path} (#{File.stat!(path).size} bytes)")
 

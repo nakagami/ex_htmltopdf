@@ -1,25 +1,25 @@
-defmodule ExSghtmltopdf do
+defmodule ExHtmltopdf do
   @moduledoc """
   HTML to PDF, natively — an Elixir NIF wrapper for
   [sghtmltopdf](https://github.com/waka/sghtmltopdf), a PDF rendering engine
   built on Servo components (html5ever, Stylo, Taffy). No headless browser, no
   external binary, no ports: the engine runs in-process on a dirty scheduler.
 
-      {:ok, pdf} = ExSghtmltopdf.render("<h1>Hello</h1>")
-      :ok = ExSghtmltopdf.render_to_file("<h1>Hello</h1>", "/tmp/hello.pdf", page_size: "A4")
+      {:ok, pdf} = ExHtmltopdf.render("<h1>Hello</h1>")
+      :ok = ExHtmltopdf.render_to_file("<h1>Hello</h1>", "/tmp/hello.pdf", page_size: "A4")
 
   ## Options
 
   Options mirror the upstream CLI flags one-to-one — underscored atom keys map
   to the flag names (`page_size: "A4"` → `--page-size A4`). See
-  `ExSghtmltopdf.Options` for the conversion rules and the upstream
+  `ExHtmltopdf.Options` for the conversion rules and the upstream
   documentation for the full flag list. Commonly used:
 
     * `page_size: "A4"`, `orientation: "landscape"`
     * `margin_top: "20mm"` (and `_bottom`/`_left`/`_right`)
     * `grayscale: true`, `no_images: true`, `no_background: true`
     * `header_html: path`, `footer_html: path`, `toc: true`, `cover: path`
-    * `font: "/path/to/font.ttf"` (see `ExSghtmltopdf.Options` for `.ttc` faces)
+    * `font: "/path/to/font.ttf"` (see `ExHtmltopdf.Options` for `.ttc` faces)
     * `user_style_sheet: path`, `minimum_font_size: 9`
 
   ## Security posture
@@ -48,7 +48,7 @@ defmodule ExSghtmltopdf do
       a `<base href>`) if your HTML references relative images/stylesheets.
   """
 
-  alias ExSghtmltopdf.{Error, Native, Options}
+  alias ExHtmltopdf.{Error, Native, Options}
 
   @typedoc "See the module documentation for common options."
   @type options :: keyword() | map()
@@ -56,11 +56,11 @@ defmodule ExSghtmltopdf do
   @doc """
   Renders an HTML document to a PDF binary.
 
-  Returns `{:ok, pdf_binary}` or `{:error, %ExSghtmltopdf.Error{}}`. Raises
+  Returns `{:ok, pdf_binary}` or `{:error, %ExHtmltopdf.Error{}}`. Raises
   `ArgumentError` for malformed option *shapes* (option *values* the engine
   rejects come back as `{:error, %Error{kind: :usage}}`).
 
-      {:ok, pdf} = ExSghtmltopdf.render("<p>hi</p>", page_size: "A5")
+      {:ok, pdf} = ExHtmltopdf.render("<p>hi</p>", page_size: "A5")
 
   """
   @spec render(iodata(), options()) :: {:ok, binary()} | {:error, Error.t()}
@@ -73,7 +73,7 @@ defmodule ExSghtmltopdf do
 
   @doc """
   Same as `render/2`, but returns the PDF binary directly and raises
-  `ExSghtmltopdf.Error` on failure.
+  `ExHtmltopdf.Error` on failure.
   """
   @spec render!(iodata(), options()) :: binary()
   def render!(html, options \\ []) do
@@ -88,9 +88,9 @@ defmodule ExSghtmltopdf do
 
   The file is written atomically (temp file + rename), so a failed render
   never leaves a truncated PDF at `path`. Returns `:ok` or
-  `{:error, %ExSghtmltopdf.Error{}}`.
+  `{:error, %ExHtmltopdf.Error{}}`.
 
-      :ok = ExSghtmltopdf.render_to_file("<p>hi</p>", "out.pdf", grayscale: true)
+      :ok = ExHtmltopdf.render_to_file("<p>hi</p>", "out.pdf", grayscale: true)
 
   """
   @spec render_to_file(iodata(), Path.t(), options()) :: :ok | {:error, Error.t()}
@@ -104,7 +104,7 @@ defmodule ExSghtmltopdf do
   end
 
   @doc """
-  Same as `render_to_file/3`, but raises `ExSghtmltopdf.Error` on failure.
+  Same as `render_to_file/3`, but raises `ExHtmltopdf.Error` on failure.
   """
   @spec render_to_file!(iodata(), Path.t(), options()) :: :ok
   def render_to_file!(html, path, options \\ []) do
@@ -116,7 +116,7 @@ defmodule ExSghtmltopdf do
 
   # Extracted at compile time from the Cargo pin so it can never drift.
   @external_resource cargo_toml =
-                       Path.expand("../native/ex_sghtmltopdf/Cargo.toml", __DIR__)
+                       Path.expand("../native/ex_htmltopdf/Cargo.toml", __DIR__)
   [_, upstream_revision] = Regex.run(~r/rev = "([0-9a-f]{40})"/, File.read!(cargo_toml))
   @upstream_revision upstream_revision
 
@@ -124,7 +124,7 @@ defmodule ExSghtmltopdf do
   The full git revision of [sghtmltopdf](https://github.com/waka/sghtmltopdf)
   this build wraps. Include it in upstream bug reports.
 
-      iex> ExSghtmltopdf.upstream_revision() =~ ~r/^[0-9a-f]{40}$/
+      iex> ExHtmltopdf.upstream_revision() =~ ~r/^[0-9a-f]{40}$/
       true
 
   """

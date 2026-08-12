@@ -6,9 +6,9 @@ release:
 
 # Run the test suite (builds the NIF locally).
 test:
-    EXSGHTMLTOPDF_BUILD=1 mix test
+    EXHTMLTOPDF_BUILD=1 mix test
 
 # Format Elixir + Rust.
 fmt:
     mix format
-    cd native/ex_sghtmltopdf && cargo fmt
+    cd native/ex_htmltopdf && cargo fmt

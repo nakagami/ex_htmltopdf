@@ -1,19 +1,19 @@
-defmodule ExSghtmltopdf.MixProject do
+defmodule ExHtmltopdf.MixProject do
   use Mix.Project
 
   @version "0.1.0"
-  @source_url "https://github.com/jtippett/ex_sghtmltopdf"
+  @source_url "https://github.com/jtippett/ex_htmltopdf"
 
   def project do
     [
-      app: :ex_sghtmltopdf,
+      app: :ex_htmltopdf,
       version: @version,
       elixir: "~> 1.15",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
       docs: docs(),
-      name: "ExSghtmltopdf",
+      name: "ExHtmltopdf",
       description:
         "Elixir NIF wrapper for sghtmltopdf, an HTML-to-PDF renderer built on " <>
           "Servo components (html5ever, Stylo, Taffy) — no headless browser required",
@@ -40,7 +40,7 @@ defmodule ExSghtmltopdf.MixProject do
       licenses: ["MIT"],
       links: %{"GitHub" => @source_url},
       files:
-        ~w(lib native/ex_sghtmltopdf/Cargo.toml native/ex_sghtmltopdf/Cargo.lock native/ex_sghtmltopdf/src checksum-Elixir.ExSghtmltopdf.Native.exs .formatter.exs mix.exs README.md CHANGELOG.md LICENSE)
+        ~w(lib native/ex_htmltopdf/Cargo.toml native/ex_htmltopdf/Cargo.lock native/ex_htmltopdf/src checksum-Elixir.ExHtmltopdf.Native.exs .formatter.exs mix.exs README.md CHANGELOG.md LICENSE)
     ]
   end
 

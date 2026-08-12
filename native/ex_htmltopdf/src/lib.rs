@@ -152,4 +152,4 @@ fn error_term(env: Env<'_>, err: NifError) -> Term<'_> {
     (atoms::error(), (kind, message)).encode(env)
 }
 
-rustler::init!("Elixir.ExSghtmltopdf.Native");
+rustler::init!("Elixir.ExHtmltopdf.Native");
