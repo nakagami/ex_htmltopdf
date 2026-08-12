@@ -1,0 +1,29 @@
+[package]
+name = "ex_sghtmltopdf"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.82"
+
+[lib]
+name = "ex_sghtmltopdf"
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+rustler = "0.38"
+
+# sghtmltopdf-core is NOT published to crates.io (the Ruby binding uses a path
+# dep), so we pin the full 40-char hash of the commit the latest upstream tag
+# points at — the ExMonty approach. Bump deliberately via UPDATE_PROCEDURE.md.
+#
+# Feature notes:
+#   - default = ["cli", "server"]. We need "cli" — not for clap's argv parsing
+#     alone, but because `cli::parse_convert_argv` is the shared option parser
+#     that the CLI, the HTTP server, and the Ruby binding all use. Reusing it
+#     keeps one option surface across every entry point (Elixir builds the argv,
+#     exactly like the Ruby gem does).
+#   - "server" (tiny_http) is the standalone HTTP server mode. Useless inside
+#     the BEAM (Plug exists) — left off.
+sghtmltopdf-core = { git = "https://github.com/waka/sghtmltopdf.git", rev = "d774b79aaf5181cd4ceccd34ede115fdc6a34595", default-features = false, features = [
+    "cli",
+] }
