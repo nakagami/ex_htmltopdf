@@ -8,12 +8,8 @@ defmodule ExHtmltopdfTest do
   @html "<!doctype html><html><body><h1>Hello, PDF</h1><p>from Elixir</p></body></html>"
 
   describe "NIF loading" do
-    test "the native library links against sghtmltopdf-core" do
+    test "the native library links against sghtmltopdf" do
       assert ExHtmltopdf.Native.default_page_size() =~ ~r/^\d+(\.\d+)?x\d+(\.\d+)?$/
-    end
-
-    test "upstream_revision/0 exposes the Cargo pin" do
-      assert ExHtmltopdf.upstream_revision() =~ ~r/^[0-9a-f]{40}$/
     end
   end
 

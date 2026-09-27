@@ -113,21 +113,4 @@ defmodule ExHtmltopdf do
       {:error, %Error{} = error} -> raise error
     end
   end
-
-  # Extracted at compile time from the Cargo pin so it can never drift.
-  @external_resource cargo_toml =
-                       Path.expand("../native/ex_htmltopdf/Cargo.toml", __DIR__)
-  [_, upstream_revision] = Regex.run(~r/rev = "([0-9a-f]{40})"/, File.read!(cargo_toml))
-  @upstream_revision upstream_revision
-
-  @doc """
-  The full git revision of [sghtmltopdf](https://github.com/waka/sghtmltopdf)
-  this build wraps. Include it in upstream bug reports.
-
-      iex> ExHtmltopdf.upstream_revision() =~ ~r/^[0-9a-f]{40}$/
-      true
-
-  """
-  @spec upstream_revision() :: String.t()
-  def upstream_revision, do: @upstream_revision
 end

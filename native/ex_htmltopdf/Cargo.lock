@@ -237,7 +237,7 @@ name = "ex_htmltopdf"
 version = "0.1.0"
 dependencies = [
  "rustler",
- "sghtmltopdf-core",
+ "sghtmltopdf",
 ]
 
 [[package]]
@@ -553,9 +553,9 @@ dependencies = [
 
 [[package]]
 name = "pdf-writer"
-version = "0.15.0"
+version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5e456864a7a304047bff84977dc6fb162bd956475d40ba50b2dcecaada7f753"
+checksum = "5df03c7d216de06f93f398ef06f1385a60f2c597bb96f8195c8d98e08a26b1d5"
 dependencies = [
  "bitflags",
  "itoa",
@@ -882,9 +882,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "sghtmltopdf-core"
-version = "0.1.1"
-source = "git+https://github.com/waka/sghtmltopdf.git?rev=d774b79aaf5181cd4ceccd34ede115fdc6a34595#d774b79aaf5181cd4ceccd34ede115fdc6a34595"
+name = "sghtmltopdf"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "99ed4a375f77c4070fc3718ffd90a56c28e78cbe108b3a11b0bdd35947cbe39e"
 dependencies = [
  "base64 0.22.1",
  "clap",

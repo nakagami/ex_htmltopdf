@@ -35,32 +35,23 @@ defmodule ExHtmltopdf.Options do
   per-character flags. Pass binaries (`"Report"`).
   """
 
-  # Input is always `-` (stdin placeholder — the actual bytes cross the NIF
-  # boundary directly and this argument is never read). Output is decided by
-  # the Rust sink, so it is a placeholder too; it can't be omitted because the
-  # CLI requires --output when input is `-`.
-  @argv_prefix ["sghtmltopdf", "-", "--output", "-"]
-
   @doc """
   Builds the argv list for the native option parser.
 
       iex> ExHtmltopdf.Options.to_argv(page_size: "A4", grayscale: true)
-      ["sghtmltopdf", "-", "--output", "-", "--page-size", "A4", "--grayscale"]
+      ["--page-size", "A4", "--grayscale"]
 
       iex> ExHtmltopdf.Options.to_argv([])
-      ["sghtmltopdf", "-", "--output", "-"]
+      []
   """
   @spec to_argv(keyword() | map()) :: [String.t()]
   def to_argv(options) do
-    args =
-      Enum.flat_map(options, fn {key, value} ->
-        Enum.flat_map(pairs_for(key, value), fn
-          {name, nil} -> ["--#{name}"]
-          {name, arg} -> ["--#{name}", arg]
-        end)
+    Enum.flat_map(options, fn {key, value} ->
+      Enum.flat_map(pairs_for(key, value), fn
+        {name, nil} -> ["--#{name}"]
+        {name, arg} -> ["--#{name}", arg]
       end)
-
-    @argv_prefix ++ args
+    end)
   end
 
   # One key/value into a list of {flag-name, value-or-nil} pairs. A nil value
